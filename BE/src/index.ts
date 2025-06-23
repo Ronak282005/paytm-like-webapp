@@ -1,5 +1,5 @@
 import express, { json } from "express";
-import {authRouter} from "./routes/auth"
+import authRouter from "./routes/auth";
 
 const app = express()
 app.use(json())

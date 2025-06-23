@@ -14,8 +14,15 @@ export const authMiddleware = (req : Request,res:Response,next : NextFunction) =
     try {
         const decode = jwt.verify(token,ENV.JWT_SECRET)
         //@ts-ignore
-        req.userId = decode.userId
-        next()
+        if (decode.userId) {
+            //@ts-ignore
+            req.userId = decode.userId
+            next()
+        }else{
+            res.status(403).json({
+                msg : "Error"
+            })
+        }
     } catch (error) {
         res.status(403).json({
             msg : "Error while decoding token"

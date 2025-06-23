@@ -2,6 +2,8 @@ import { Router } from "express";
 import { User } from "../db/db";
 import bcrypt from "bcrypt";
 import { z } from "zod";
+import jwt from "jsonwebtoken"
+import { ENV } from "../config/env";
 
 const authRouter = Router();
 
@@ -13,9 +15,23 @@ const signupInput = z.object({
 })
 
 authRouter.post("/signup", async (req, res) => {
-  const { username, firstName, lastName, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  try {
+    const {success} = signupInput.safeParse(req.body);
+    const { username, firstName, lastName, password } = req.body
+    if(!success){
+        res.status(403).json({
+            msg : "invalid inputs!"
+        })
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    try {
+        const alreadyUser = await User.findOne({
+            username
+        })
+      if(alreadyUser){
+          res.status(403).json({
+              msg : "Email already taken"
+          })
+      }
     const user = new User({
       username,
       firstName,
@@ -23,8 +39,12 @@ authRouter.post("/signup", async (req, res) => {
       password: hashedPassword,
     });
     await user.save();
+    const token = jwt.sign({
+        userId : user._id
+    },ENV.JWT_SECRET);
     res.json({
       msg: "user created succesfully!",
+      token
     });
   } catch (error) {
     console.log(error);

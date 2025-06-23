@@ -2,7 +2,7 @@ import { Router } from "express";
 import { User } from "../db/db";
 import bcrypt from "bcrypt";
 
-export const authRouter = Router();
+const authRouter = Router();
 
 authRouter.post("/signup", async (req, res) => {
   const { username, firstName, lastName, password } = req.body;
@@ -25,3 +25,5 @@ authRouter.post("/signup", async (req, res) => {
     });
   }
 });
+
+export default authRouter

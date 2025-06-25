@@ -27,7 +27,7 @@ userRouter.post("/update", authMiddleware, async (req, res) => {
 });
 
 userRouter.get("/bulk", async (req, res) => {
-  const { filter } = req.query;
+  const { filter } = req.query || "";
   try {
     const users = await User.find({
       $or: [

@@ -26,15 +26,17 @@ const userSchema = new Schema(
 
 export const User = model("User", userSchema);
 
-const accountSchema = new Schema({
-  user : {
-    type : Schema.Types.ObjectId,
-    ref : "User"
+const accountSchema = new Schema(
+  {
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+    balance: {
+      type: Number,
+    },
   },
-  balance : {
-    type : Number
-  }
-},{timestamps : true})
+  { timestamps: true }
+);
 
-
-export const Account = model("Account",accountSchema)
+export const Account = model("Account", accountSchema);
